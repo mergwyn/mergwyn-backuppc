@@ -1,6 +1,7 @@
 #
 # This file is managed by Puppet.
 #
+<% require 'pp' %>
 <% if @osfamily == 'Debian' -%>
 $ENV{'PATH'} = '/bin:/usr/bin';
 delete @ENV{'IFS', 'CDPATH', 'ENV', 'BASH_ENV'};
