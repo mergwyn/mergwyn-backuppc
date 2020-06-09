@@ -6,7 +6,7 @@ describe 'Facter::Util::Fact::backuppc_pubkey_rsa', type: :fact do
   on_supported_os.each do |os, facts|
     context "on #{os}" do
       let(:facts) { facts }
-      #let(:content) { StringIO.new('ssh-rsa xxx_key_xxx user@host') }
+      # let(:content) { StringIO.new('ssh-rsa xxx_key_xxx user@host') }
       let(:content) { 'ssh-rsa xxx_key_xxx user@host' }
       let(:path) do
         case facts[:osfamily]
