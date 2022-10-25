@@ -19,4 +19,5 @@ backuppc::server::tar_path:          '/bin/tar'
 backuppc::server::preseed_file:
 
 backuppc::client::rsync_path:         '/usr/bin/rsync'
+backuppc::client::rsync_bpc_path:     '/usr/libexec/backuppc-rsync/rsync_bpc'
 backuppc::client::tar_path:           '/bin/tar'

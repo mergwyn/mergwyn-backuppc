@@ -23,4 +23,5 @@ backuppc::server::preseed_file:
     content: "template('backuppc/Debian-preeseed.erb')"
 
 backuppc::client::rsync_path:         '/usr/bin/rsync'
+backuppc::client::rsync_bpc_path:     '/usr/libexec/backuppc-rsync/rsync_bpc'
 backuppc::client::tar_path:           '/bin/tar'
