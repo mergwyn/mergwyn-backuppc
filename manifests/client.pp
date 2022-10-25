@@ -301,6 +301,7 @@ class backuppc::client (
   Boolean $manage_sshkey                                     = true,
   Boolean $manage_sudo                                       = false,
   Stdlib::Absolutepath $rsync_path                           = '/bin/rsync',
+  Stdlib::Absolutepath $rsync_bpc_path                       = '/usr/libexec/backuppc-rsync/rsync_bpc',
   Boolean $rsyncd_auth_required                              = false,
   Stdlib::Absolutepath $system_home_directory                = '/var/backups',
   Stdlib::Absolutepath $tar_path                             = '/bin/tar',
