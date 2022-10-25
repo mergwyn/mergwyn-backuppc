@@ -15,6 +15,7 @@ backuppc::server::manage_apache:      true
 backuppc::server::package:            'backuppc'
 backuppc::server::par_path:           '/usr/bin/par2'
 backuppc::server::rsync_path:         '/usr/bin/rsync'
+backuppc::client::rsync_bpc_path:     '/usr/libexec/backuppc-rsync/rsync_bpc'
 backuppc::server::service:            'backuppc'
 backuppc::server::tar_path:           '/bin/tar'
 backuppc::server::preseed_file:

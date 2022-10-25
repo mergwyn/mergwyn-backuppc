@@ -342,6 +342,7 @@ class backuppc::server (
   Integer $ping_max_msec                                    = 20,
   Integer $restore_info_keep_cnt                            = 10,
   Stdlib::Absolutepath $rsync_path                          = '/bin/rsync',
+  Stdlib::Absolutepath $rsync_bpc_path                      = '/usr/libexec/backuppc-rsync/rsync_bpc',
   String[1] $service                                        = 'backuppc',
   Boolean $service_enable                                   = true,
   Stdlib::Absolutepath $tar_path                            = '/bin/tar',

@@ -14,6 +14,7 @@ backuppc::server::log_directory:     '/var/log/BackupPC'
 backuppc::server::package:           'BackupPC'
 backuppc::server::par_path:
 backuppc::server::rsync_path:        '/usr/bin/rsync'
+backuppc::server::rsync_bpc_path:    '/usr/libexec/backuppc-rsync/rsync_bpc'
 backuppc::server::service:           'backuppc'
 backuppc::server::tar_path:          '/bin/tar'
 backuppc::server::preseed_file:
