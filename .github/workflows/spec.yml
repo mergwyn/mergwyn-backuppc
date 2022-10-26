@@ -49,7 +49,7 @@ jobs:
           if [ '${{ github.repository_owner }}' == 'mergwyn' ]; then
             bundle exec matrix_from_metadata_v2 --exclude-platforms '["Darwin-18","Darwin-20","windows-10","windows-11"]'
           else
-            echo  "::set-output name=spec_matrix::{}"
+            echo  "name=spec_matrix::{}" >> $GITHUB_OUTPUT
           fi
   Spec:
     name: "Spec Tests (Puppet: ${{matrix.puppet_version}}, Ruby Ver: ${{matrix.ruby_version}})"
