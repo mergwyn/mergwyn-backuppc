@@ -96,8 +96,9 @@ $Conf{TarClientRestoreCmd} = '$sshPath -q -x -l root $host'
 $Conf{TarClientPath} = '<%= @tar_path  %>';
 $Conf{RsyncClientPath} = '<%= @rsync_path  %>';
 $Conf{RsyncBackupPCPath} = '<%= @rsync_bpc_path  %>';
-$Conf{RsyncClientCmd} = '$sshPath -q -x -l root $host $rsyncPath $argList+';
-$Conf{RsyncClientRestoreCmd} = '$sshPath -q -x -l root $host $rsyncPath $argList+';
+#$Conf{RsyncClientCmd} = '$sshPath -q -x -l root $host $rsyncPath $argList+';
+#$Conf{RsyncClientRestoreCmd} = '$sshPath -q -x -l root $host $rsyncPath $argList+';
+$Conf{RsyncSshArgs} = ['-e', '$sshPath -l root'];   
 $Conf{RsyncShareName} = '/';
 $Conf{RsyncdClientPort} = 873;
 $Conf{RsyncdUserName} = '';
