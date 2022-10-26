@@ -109,7 +109,6 @@ $Conf{RsyncCsumCacheVerifyProb} = 0.01;
 $Conf{RsyncArgsExtra} = <%= PP.pp(@rsync_args_extra,'').chomp.tr(?", ?') -%>;
 <% end -%>
 # TODO parameters??
-$Conf{RsyncArgsExtra} = []; 
 $Conf{RsyncFullArgsExtra} = ['--checksum'];
 $Conf{RsyncIncrArgsExtra} = [];  
 # TODO end

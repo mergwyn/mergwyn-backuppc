@@ -130,6 +130,9 @@ $Conf{RsyncArgsExtra} = <%= PP.pp(@rsync_args_extra,'').chomp.tr(?", ?') -%>;
 <% if defined?(@rsync_restore_args) and !@rsync_restore_args.empty? -%>
 $Conf{RsyncRestoreArgs} = <%= PP.pp(@rsync_restore_args,'').chomp.tr(?", ?') -%>;
 <% end -%>
+<% if defined?(@rsync__restore_args_extra) and !@rsync__restore_args_extra.empty? -%>
+$Conf{RsyncRestoreArgsExtra} = <%= PP.pp(@rsync__restore_args_extra,'').chomp.tr(?", ?') -%>;
+<% end -%>
 <% if defined?(@dump_pre_user_cmd) and !@dump_pre_user_cmd.empty? -%>
 $Conf{DumpPreUserCmd} = '<%= @dump_pre_user_cmd %>';
 <% end -%>
