@@ -38,7 +38,7 @@ describe 'backuppc::client' do
 
             it {
               is_expected.to contain_augeas('backuppc_host_testhost-create').with(
-                'changes' => <<-DOC.gsub(%r{^\s+}, '')
+                'changes' => <<-DOC.gsub(%r{^\s+}, ''),
                     set 01/host testhost
                     set 01/dhcp 0
                     set 01/user backuppc
@@ -48,7 +48,7 @@ describe 'backuppc::client' do
 
             it {
               is_expected.to contain_augeas('backuppc_host_testhost-update').with(
-                'changes' => <<-DOC.gsub(%r{^\s+}, '')
+                'changes' => <<-DOC.gsub(%r{^\s+}, ''),
                     set *[host = 'testhost']/dhcp 0
                     set *[host = 'testhost']/user backuppc
                     rm *[host = 'testhost']/moreusers
