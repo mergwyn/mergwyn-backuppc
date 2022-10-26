@@ -104,32 +104,6 @@ $Conf{RsyncdUserName} = '';
 $Conf{RsyncdPasswd} = '';
 $Conf{RsyncdAuthRequired} = 1;
 $Conf{RsyncCsumCacheVerifyProb} = 0.01;
-$Conf{RsyncArgs} = [
-      #
-      # Do not edit these!
-      #
-            '--numeric-ids',
-            '--perms',
-            '--owner',
-            '--group',
-            '-D',
-            '--links',
-            '--hard-links',
-            '--times',
-            '--block-size=2048',
-            '--recursive',
-      #
-      # Rsync >= 2.6.3 supports the --checksum-seed option
-            # which allows rsync checksum caching on the server.
-      # Uncomment this to enable rsync checksum caching if
-            # you have a recent client rsync version and you want
-            # to enable checksum caching.
-      #
-      #'--checksum-seed=32761',
-      #
-      # Add additional arguments here
-      #
-];
 <% if defined?(@rsync_args_extra) and !@rsync_args_extra.empty? -%>
 $Conf{RsyncArgsExtra} = <%= PP.pp(@rsync_args_extra,'').chomp.tr(?", ?') -%>;
 <% end -%>
@@ -175,6 +149,7 @@ $Conf{RsyncRestoreArgs} = [
     '--partial',
     '--log-format=log: %o %i %B %8U,%8G %9l %f%L',
     '--stats',
+];
 #TODO Add parameter??
 $Conf{RsyncRestoreArgsExtra} = [];
 $Conf{ArchiveDest} = '/tmp';
@@ -243,7 +218,7 @@ $Conf{CgiNavBarLinks} = [
         lname => "Documentation",    # actually displays $Lang->{Documentation}
     },
     {
-        link  => ""https://github.com/backuppc/backuppc/wiki",
+        link  => "https://github.com/backuppc/backuppc/wiki",
         name  => "Wiki",              # displays literal "Wiki"
     },
     {
