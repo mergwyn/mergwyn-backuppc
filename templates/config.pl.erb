@@ -104,8 +104,6 @@ $Conf{RsyncShareName} = '/';
 $Conf{RsyncdClientPort} = 873;
 $Conf{RsyncdUserName} = '';
 $Conf{RsyncdPasswd} = '';
-$Conf{RsyncdAuthRequired} = 1;
-$Conf{RsyncCsumCacheVerifyProb} = 0.01;
 <% if defined?(@rsync_args_extra) and !@rsync_args_extra.empty? -%>
 $Conf{RsyncArgsExtra} = <%= PP.pp(@rsync_args_extra,'').chomp.tr(?", ?') -%>;
 <% end -%>
