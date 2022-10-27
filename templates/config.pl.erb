@@ -25,6 +25,7 @@ $Conf{RefCntFsck} = <%= @ref_cnt_fsck %>;
 $Conf{MaxOldLogFiles} = <%= @max_old_log_files %>;
 $Conf{DfPath} = '/bin/df';
 $Conf{DfCmd} = '$dfPath $topDir';
+$Conf{DfInodeUsageCmd} = '$dfPath -i $topDir';
 $Conf{SplitPath} = '/usr/bin/split';
 $Conf{ParPath}   = '<%= @par_path  %>';
 $Conf{CatPath}   = '/bin/cat';
