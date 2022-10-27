@@ -310,6 +310,7 @@ class backuppc::server (
   Integer $archive_info_keep_cnt                            = 10,
   Integer $backuppc_nightly_period                          = 1,
   Integer $pool_size_nightly_update_period                  = 16,
+  Integer[0,3] $ref_cnt_fsck                                = 1,
   Integer[0,100] $pool_nightly_digest_check_percent         = 1,
   String $backuppc_password                                 = '',
   Boolean $backup_zero_files_is_fatal                       = true,

@@ -85,6 +85,7 @@ describe 'backuppc::server' do
             'max_backuppc_nightly_jobs' => 5,
             'backuppc_nightly_period' => 2,
             'pool_size_nightly_update_period' => 12,
+            'ref_cnt_fsck' => 3,
             'pool_nightly_digest_check_percent' => 10,
             'max_old_log_files' => 7,
             'df_max_usage_pct' => 89,

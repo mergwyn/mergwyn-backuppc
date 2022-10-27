@@ -21,7 +21,7 @@ $Conf{MaxBackupPCNightlyJobs} = <%= @max_backuppc_nightly_jobs %>;
 $Conf{BackupPCNightlyPeriod} = <%= @backuppc_nightly_period %>;
 $Conf{PoolSizeNightlyUpdatePeriod} = <%= @pool_size_nightly_update_period %>;
 $Conf{PoolNightlyDigestCheckPercent} = <%= @pool_nightly_digest_check_percent %>;
-$Conf{RefCntFsck} = 1;
+$Conf{RefCntFsck} = <%= @ref_cnt_fsck %>;
 $Conf{MaxOldLogFiles} = <%= @max_old_log_files %>;
 $Conf{DfPath} = '/bin/df';
 $Conf{DfCmd} = '$dfPath $topDir';
