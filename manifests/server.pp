@@ -25,6 +25,12 @@
 #   backed up. If you have shares that might be empty (and therefore an empty
 #   backup is valid) you should set this to false.
 #
+# @param pool_v3_enabled
+#   If a V3 pool exists (ie: an upgrade) set this to 1.  This causes the
+#   V3 pool to be checked for matches if there are no matches in the V4
+#    pool.
+#   For new installations, this should be set to 0.
+#
 # @param backuppc_nightly_period
 #   How many days (runs) it takes BackupPC_nightly to traverse the entire
 #   pool. Normally this is 1, which means every night it runs, it does
@@ -297,6 +303,7 @@ class backuppc::server (
   Integer $backuppc_nightly_period                          = 1,
   String $backuppc_password                                 = '',
   Boolean $backup_zero_files_is_fatal                       = true,
+  Boolean $pool_v3_enabled                                  = false,
   Integer $blackout_good_cnt                                = 7,
   Backuppc::BlackoutPeriods $blackout_periods = [ { hourBegin => 7.0, hourEnd => 19.5, weekDays => [1,2,3,4,5], }, ],
   Stdlib::Absolutepath $bzip2_path                          = '/bin/bzip2',
@@ -364,9 +371,10 @@ class backuppc::server (
     fail('Please provide a password for the backuppc user. This is used to login to the web based administration site.')
   }
 
-  $real_incr_fill = bool2num($incr_fill)
-  $real_bzfif     = bool2num($backup_zero_files_is_fatal)
-  $real_uccs      = bool2num($user_cmd_check_status)
+  $real_incr_fill  = bool2num($incr_fill)
+  $real_bzfif      = bool2num($backup_zero_files_is_fatal)
+  $real_uccs       = bool2num($user_cmd_check_status)
+  $real_v3_enabled = bool2num($pool_v3_enabled)
 
   $real_topdir = $topdir ? {
     ''      => lookup('backuppc::server::topdir'),

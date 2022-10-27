@@ -12,6 +12,7 @@ $Conf{ServerPort} = -1;
 $Conf{ServerMesgSecret} = '';
 $Conf{MyPath} = '/bin';
 $Conf{UmaskMode} = 027;
+$Conf{PoolV3Enabled} = <%= @real_v3_enabled %>;
 $Conf{WakeupSchedule} = [<%= @wakeup_schedule.join(', ') %>];
 $Conf{MaxBackups} = <%= @max_backups %>;
 $Conf{MaxUserBackups} = <%= @max_user_backups %>;

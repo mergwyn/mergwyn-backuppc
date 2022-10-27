@@ -87,6 +87,7 @@ describe 'backuppc::server' do
             'max_old_log_files' => 7,
             'df_max_usage_pct' => 89,
             'trash_clean_sleep_sec' => 299,
+            'pool_v3_enabled' => false,
             'full_period' => 13.97,
             'full_keep_cnt' => [4, 2, 3],
             'full_age_max' => 89,
