@@ -36,8 +36,8 @@ $Conf{DHCPAddressRanges} =  <%= PP.pp(@dhcp_address_ranges,'').chomp.tr(?", ?') 
 $Conf{BackupPCUser} = 'backuppc';
 $Conf{TopDir}      = '<%= scope['backuppc::server::real_topdir'] %>';
 $Conf{ConfDir}     = '<%= @config_directory  %>';
-$Conf{LogDir}      = '<%= scope['backuppc::server::real_log_directory'] %>';
-$Conf{RunDir}     = '/run/backuppc'; #TODO make variable
+$Conf{LogDir}      = '<%= scope['backuppc::server::log_directory'] %>';
+$Conf{RunDir}      = '<%= scope['backuppc::server::run_directory'] %>';
 $Conf{InstallDir}  = '<%= @install_directory  %>';
 $Conf{CgiDir}      = '<%= @cgi_directory  %>';
 $Conf{BackupPCUserVerify} = 1;

@@ -279,6 +279,9 @@
 # @param log_directory
 #   Location for log files.
 #
+# @param run_directory
+#   Location for files used during run.
+#
 # @param config_apache
 #   The file where the backuppc specifc config for apache is stored.
 #
@@ -350,6 +353,7 @@ class backuppc::server (
   Stdlib::Absolutepath $install_directory                   = '/usr/share/backuppc',
   String $language                                          = 'en',
   Stdlib::Absolutepath $log_directory                       = "${topdir}/log",
+  Stdlib::Absolutepath $run_directory                       = '/run/backuppc',
   Integer $max_backuppc_nightly_jobs                        = 2,
   Integer $max_backups                                      = 4,
   Integer $max_old_log_files                                = 14,
@@ -395,12 +399,6 @@ class backuppc::server (
   $directory_ensure = $ensure ? {
     'present' => 'directory',
     default => 'absent',
-  }
-
-  # On Debian, adapt log_directory to $topdir value
-  $real_log_directory = $facts['os']['family'] ? {
-    'Debian' => "${topdir}/log",
-    default  => $log_directory,
   }
 
   # If topdir is changed, create a symlink between "default" topdir and the custom
