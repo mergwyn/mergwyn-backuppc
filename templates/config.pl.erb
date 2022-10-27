@@ -47,7 +47,7 @@ $Conf{ServerInitdPath} = '';
 $Conf{ServerInitdStartCmd} = '';
 $Conf{FullPeriod} = <%= @full_period %>;
 $Conf{IncrPeriod} = <%= @incr_period %>;
-$Conf{FillCycle} = 0; 
+$Conf{FillCycle} = <%= @fill_cycle %>; 
 $Conf{FullKeepCnt} = <%= PP.pp(@full_keep_cnt,'').chomp.tr(?", ?') -%>;
 $Conf{FullKeepCntMin} = 1;
 $Conf{FullAgeMax}     = <%= @full_age_max %>;

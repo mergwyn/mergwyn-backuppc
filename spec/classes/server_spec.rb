@@ -95,6 +95,7 @@ describe 'backuppc::server' do
             'full_keep_cnt' => [4, 2, 3],
             'full_age_max' => 89,
             'incr_period' => 0.57,
+            'fill_cycle' => 10,
             'incr_keep_cnt' => 5,
             'incr_age_max' => 29,
             # 'incr_levels' => [1, 2, 3],

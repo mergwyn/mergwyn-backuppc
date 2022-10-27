@@ -120,6 +120,18 @@
 #   if at least this much time has elapsed since the last full dump, and at
 #   least $Conf{IncrPeriod} days has elapsed since the last successful dump.
 #
+# @param fill_cycle
+#   In V4+, full/incremental backups are decoupled from whether the stored
+#   backup is filled/unfilled.
+#
+#   To mimic V3 behaviour, if $Conf{FillCycle} is set to zero then fill/unfilled
+#   will continue to match full/incremental: full backups will remained filled,
+#   and incremental backups will be unfilled.  (However, the most recent
+#   backup is always filled, whether it is full or incremental.)  This is
+#   the recommended setting to keep things simple: since the backup expiry
+#   is actually done based on filled/unfilled (not full/incremental), keeping
+#   them synched makes it easier to understand the expiry settings.
+#
 # @param incr_age_max
 #   Very old incremental backups are removed after $Conf{IncrAgeMax} days.
 #   However, we keep at least $Conf{IncrKeepCntMin} incremental backups no
@@ -341,6 +353,7 @@ class backuppc::server (
   Integer $full_age_max                                     = 90,
   Variant[Integer,Array[Integer]] $full_keep_cnt            = 1,
   Numeric $full_period                                      = 6.97,
+  Integer $fill_cycle                                       = 0,
   String[1] $group_apache                                   = 'www-data',
   Stdlib::Absolutepath $gzip_path                           = '/bin/gzip',
   Stdlib::Absolutepath $hosts                               = "${config_directory}/hosts",
