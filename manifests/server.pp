@@ -36,8 +36,13 @@
 #   pool. Normally this is 1, which means every night it runs, it does
 #   traverse the entire pool removing unused pool files.
 #
-# @param pool_size_nightly_period
+# @param pool_size_nightly_update_period
 #   Sets how many nights it takes to completely update the V4 pool size.
+#
+# @param pool_nightly_digest_check_percent
+#   Integrity check the pool files by confirming the md5 digest of the
+#   contents matches their file name.  Because the pool is very large,
+#   only check a small random percentage of the pool files each night.
 #
 # @param backuppc_password
 #   Password for the backuppc user used to access the web interface.
@@ -304,7 +309,8 @@ class backuppc::server (
   Boolean $apache_require_ssl                               = false,
   Integer $archive_info_keep_cnt                            = 10,
   Integer $backuppc_nightly_period                          = 1,
-  Integer $pool_size_nightly_period                         = 16,
+  Integer $pool_size_nightly_update_period                  = 16,
+  Integer[0,100] $pool_nightly_digest_check_percent         = 1,
   String $backuppc_password                                 = '',
   Boolean $backup_zero_files_is_fatal                       = true,
   Boolean $pool_v3_enabled                                  = false,
