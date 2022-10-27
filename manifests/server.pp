@@ -137,17 +137,8 @@
 #   However, we keep at least $Conf{IncrKeepCntMin} incremental backups no
 #   matter how old they are.
 #
-# @param incr_fill
-#   Boolean. Whether incremental backups are filled. "Filling" means that the
-#   most recent fulli (or filled) dump is merged into the new incremental dump
-#   using hardlinks. This makes an incremental dump look like a full dump.
-#
 # @param incr_keep_cnt
 #   Number of incremental backups to keep.
-#
-# @param incr_levels
-#   A full backup has level 0. A new incremental of level N will backup all files
-#   that have changed since the most recent backup of a lower level.
 #
 # @param incr_period
 #   Minimum period in days between incremental backups (a user requested
@@ -194,15 +185,6 @@
 #   Additional number of simultaneous backups that users
 #   can run. As many as $Conf{MaxBackups} + $Conf{MaxUserBackups}
 #   requests can run at the same time.
-#
-# @param partial_age_max
-#   A failed full backup is saved as a partial backup. The rsync XferMethod can
-#   take advantage of the partial full when the next backup is run. This
-#   parameter sets the age of the partial full in days: if the partial backup is
-#   older than this number of days, then rsync will ignore (not use) the partial
-#   full when the next backup is run. If you set this to a negative value then
-#   no partials will be saved. If you set this to 0, partials will be saved, but
-#   will not be used by the next backup.
 #
 # @param ping_max_msec
 #   Maximum RTT value (in ms) above which backup won't be started. Default to
@@ -359,9 +341,7 @@ class backuppc::server (
   Stdlib::Absolutepath $hosts                               = "${config_directory}/hosts",
   Stdlib::Absolutepath $htpasswd_apache                     = "${config_directory}/htpasswd",
   Integer $incr_age_max                                     = 30,
-  Boolean $incr_fill                                        = false,
   Integer $incr_keep_cnt                                    = 6,
-  Array[Integer] $incr_levels                               = [1],
   Numeric $incr_period                                      = 0.97,
   Stdlib::Absolutepath $install_directory                   = '/usr/share/backuppc',
   String $language                                          = 'en',
@@ -373,7 +353,6 @@ class backuppc::server (
   Integer $max_pending_cmds                                 = 15,
   Integer $max_user_backups                                 = 4,
   String[1] $package                                        = 'backuppc',
-  Integer $partial_age_max                                  = 3,
   Integer $ping_max_msec                                    = 20,
   Integer $restore_info_keep_cnt                            = 10,
   Stdlib::Absolutepath $rsync_path                          = '/bin/rsync',
@@ -399,7 +378,6 @@ class backuppc::server (
     fail('Please provide a password for the backuppc user. This is used to login to the web based administration site.')
   }
 
-  $real_incr_fill  = bool2num($incr_fill)
   $real_bzfif      = bool2num($backup_zero_files_is_fatal)
   $real_uccs       = bool2num($user_cmd_check_status)
   $real_v3_enabled = bool2num($pool_v3_enabled)
