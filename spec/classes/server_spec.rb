@@ -84,6 +84,7 @@ describe 'backuppc::server' do
             'max_pending_cmds' => 12,
             'max_backuppc_nightly_jobs' => 5,
             'backuppc_nightly_period' => 2,
+            'pool_size_nightly_period' => 12,
             'max_old_log_files' => 7,
             'df_max_usage_pct' => 89,
             'trash_clean_sleep_sec' => 299,

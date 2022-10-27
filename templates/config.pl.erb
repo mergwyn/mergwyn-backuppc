@@ -19,7 +19,7 @@ $Conf{MaxUserBackups} = <%= @max_user_backups %>;
 $Conf{MaxPendingCmds} = <%= @max_pending_cmds %>;
 $Conf{MaxBackupPCNightlyJobs} = <%= @max_backuppc_nightly_jobs %>;
 $Conf{BackupPCNightlyPeriod} = <%= @backuppc_nightly_period %>;
-$Conf{PoolSizeNightlyUpdatePeriod} = 16;   
+$Conf{PoolSizeNightlyUpdatePeriod} = <% @pool_size_nightly_period %>;   
 $Conf{PoolNightlyDigestCheckPercent} = 1;
 $Conf{RefCntFsck} = 1;
 $Conf{MaxOldLogFiles} = <%= @max_old_log_files %>;

@@ -36,6 +36,9 @@
 #   pool. Normally this is 1, which means every night it runs, it does
 #   traverse the entire pool removing unused pool files.
 #
+# @param pool_size_nightly_period
+#   Sets how many nights it takes to completely update the V4 pool size.
+#
 # @param backuppc_password
 #   Password for the backuppc user used to access the web interface.
 #
@@ -301,6 +304,7 @@ class backuppc::server (
   Boolean $apache_require_ssl                               = false,
   Integer $archive_info_keep_cnt                            = 10,
   Integer $backuppc_nightly_period                          = 1,
+  Integer $pool_size_nightly_period                         = 16,
   String $backuppc_password                                 = '',
   Boolean $backup_zero_files_is_fatal                       = true,
   Boolean $pool_v3_enabled                                  = false,
