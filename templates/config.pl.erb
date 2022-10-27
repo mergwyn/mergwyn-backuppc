@@ -17,6 +17,7 @@ $Conf{WakeupSchedule} = [<%= @wakeup_schedule.join(', ') %>];
 $Conf{MaxBackups} = <%= @max_backups %>;
 $Conf{MaxUserBackups} = <%= @max_user_backups %>;
 $Conf{MaxPendingCmds} = <%= @max_pending_cmds %>;
+$Conf{CmdQueueNice} = <%= @cmd_queue_nice %>;
 $Conf{MaxBackupPCNightlyJobs} = <%= @max_backuppc_nightly_jobs %>;
 $Conf{BackupPCNightlyPeriod} = <%= @backuppc_nightly_period %>;
 $Conf{PoolSizeNightlyUpdatePeriod} = <%= @pool_size_nightly_update_period %>;
@@ -96,7 +97,9 @@ $Conf{TarClientRestoreCmd} = '$sshPath -q -x -l root $host'
 $Conf{TarClientPath} = '<%= @tar_path  %>';
 $Conf{RsyncClientPath} = '<%= @rsync_path  %>';
 $Conf{RsyncBackupPCPath} = '<%= @rsync_bpc_path  %>';
-$Conf{RsyncSshArgs} = ['-e', '$sshPath -l root'];   
+<% if defined?(@rsync_ssh_args) and !@rsync_ssh_args.empty? -%>
+$Conf{RsyncSshArgs} = <%= PP.pp(@rsync_ssh_args,'').chomp.tr(?", ?') -%>;
+<% end -%>
 $Conf{RsyncShareName} = '/';
 $Conf{RsyncdClientPort} = 873;
 $Conf{RsyncdUserName} = '';

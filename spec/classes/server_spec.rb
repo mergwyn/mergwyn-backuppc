@@ -90,6 +90,7 @@ describe 'backuppc::server' do
             'max_old_log_files' => 7,
             'df_max_usage_pct' => 89,
             'trash_clean_sleep_sec' => 299,
+            'cmd_queue_nice' => 1,
             'pool_v3_enabled' => false,
             'full_period' => 13.97,
             'full_keep_cnt' => [4, 2, 3],
@@ -114,6 +115,7 @@ describe 'backuppc::server' do
             'cgi_date_format_mmdd' => 2,
             'user_cmd_check_status' => false,
             'ping_max_msec' => 4,
+            'rsync_ssh_args' => ['--test', 'args'],
           }
           test_params.each do |tparam, tvalue|
             context "with #{tparam} = #{tvalue}" do

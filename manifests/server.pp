@@ -181,6 +181,10 @@
 #   jobs. This limit is to make sure BackupPC doesn't fall too far
 #   behind in running BackupPC_link commands.
 #
+# @param cmd_queue_nice
+#   Nice level at which CmdQueue commands (eg: BackupPC_link and
+#   BackupPC_nightly) are run at. 
+#
 # @param max_user_backups
 #   Additional number of simultaneous backups that users
 #   can run. As many as $Conf{MaxBackups} + $Conf{MaxUserBackups}
@@ -233,6 +237,12 @@
 #
 # @param rsync_args_extra
 #   Additional arguments to rsync for backup.
+#
+# @param rsync_ssh_args
+#   Ssh arguments for rsync to run ssh to connect to the client.
+#   Rather than permit root ssh on the client, it is more secure
+#   to just allow ssh via a low-privileged user, and use sudo
+#   in $Conf{RsyncClientPath}.
 #
 # @param package
 #   The name of the backuppc package.
@@ -351,6 +361,7 @@ class backuppc::server (
   Integer $max_backups                                      = 4,
   Integer $max_old_log_files                                = 14,
   Integer $max_pending_cmds                                 = 15,
+  Integer $cmd_queue_nice                                   = 10,
   Integer $max_user_backups                                 = 4,
   String[1] $package                                        = 'backuppc',
   Integer $ping_max_msec                                    = 20,
@@ -372,6 +383,7 @@ class backuppc::server (
     }
   },
   Optional[Array[String]] $rsync_args_extra                 = undef,
+  Optional[Array[String]] $rsync_ssh_args                   = [ '-e', '$sshPath -l root' ],
 ) {
 
   if empty($backuppc_password) {
