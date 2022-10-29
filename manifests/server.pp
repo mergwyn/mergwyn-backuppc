@@ -400,7 +400,7 @@ class backuppc::server (
   },
   Optional[Array[String]] $rsync_args_extra                 = undef,
   Optional[Array[String]] $rsync_full_args_extra            = [ '--checksum' ],
-  Optional[Array[String]] $rsync_incr_args_extra            = [],
+  Optional[Array[String]] $rsync_incr_args_extra            = undef,
   Optional[Array[String]] $rsync_ssh_args                   = [ '-e', '$sshPath -l root' ],
 ) {
 
