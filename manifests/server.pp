@@ -95,7 +95,18 @@
 #   tend to be small) are still performed, independent of disk usage.
 #   Also, currently running backups will not be terminated when the disk
 #   inode usage exceeds this number.
-
+#
+# @param ref_cnt_fsck
+#   Reference counts of pool files are computed per backup by accumulating the relative changes.
+#   That means, however, that any error will never be corrected. To be more conservative, we do
+#   a periodic full-redo of the backup reference counts (called an "fsck"). $Conf{RefCntFsck} controls
+#   how often this is done:
+#
+#     0: no additional fsck
+#     1: do an fsck on the last backup if it is from a full backup
+#     2: do an fsck on the last two backups always
+#     3: do a full fsck on all the backups
+#
 # @param email_admin_user_name
 #   Destination address to an administrative user who will receive a nightly
 #   email with warnings and errors.

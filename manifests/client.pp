@@ -27,6 +27,17 @@
 # @param manage_sshkey
 #   Set to true to create the sshkey for the client.
 #
+# @param ref_cnt_fsck
+#   Reference counts of pool files are computed per backup by accumulating the relative changes.
+#   That means, however, that any error will never be corrected. To be more conservative, we do
+#   a periodic full-redo of the backup reference counts (called an "fsck"). $Conf{RefCntFsck} controls
+#   how often this is done:
+#
+#     0: no additional fsck
+#     1: do an fsck on the last backup if it is from a full backup
+#     2: do an fsck on the last two backups always
+#     3: do a full fsck on all the backups
+#
 # @param rsyncd_auth_required
 #   Whether authentication is mandatory when connecting to the client's
 #   rsyncd. By default this is on, ensuring that BackupPC will refuse to
@@ -129,6 +140,9 @@
 # @param full_keep_cnt
 #   Number of full backups to keep.
 #
+# @param full_keep_cnt_min
+#   Minimum umber of full backups to keep.
+#
 # @param full_period
 #   Minimum period in days between full backups. A full dump will only be done
 #   if at least this much time has elapsed since the last full dump, and at
@@ -148,18 +162,28 @@
 # @param hosts_file_user
 #   Default user to use in the backuppc hosts file.
 #
+# @param fill_cycle
+#   In V4+, full/incremental backups are decoupled from whether the stored
+#   backup is filled/unfilled.
+#
+#   To mimic V3 behaviour, if $Conf{FillCycle} is set to zero then fill/unfilled
+#   will continue to match full/incremental: full backups will remained filled,
+#   and incremental backups will be unfilled.  (However, the most recent
+#   backup is always filled, whether it is full or incremental.)  This is
+#   the recommended setting to keep things simple: since the backup expiry
+#   is actually done based on filled/unfilled (not full/incremental), keeping
+#   them synched makes it easier to understand the expiry settings.
+#
 # @param incr_age_max
 #   Very old incremental backups are removed after $Conf{IncrAgeMax} days.
 #   However, we keep at least $Conf{IncrKeepCntMin} incremental backups no
 #   matter how old they are.
 #
-# @param incr_fill
-#   Boolean. Whether incremental backups are filled. "Filling" means that the
-#   most recent fulli (or filled) dump is merged into the new incremental dump
-#   using hardlinks. This makes an incremental dump look like a full dump.
-#
 # @param incr_keep_cnt
 #   Number of incremental backups to keep.
+#
+# @param incr_keep_cnt_min
+#   Minimum number of incremental backups to keep.
 #
 # @param incr_levels
 #   A full backup has level 0. A new incremental of level N will backup all files
@@ -168,15 +192,6 @@
 # @param incr_period
 #   Minimum period in days between incremental backups (a user requested
 #   incremental backup will be done anytime on demand).
-#
-# @param partial_age_max
-#   A failed full backup is saved as a partial backup. The rsync XferMethod can
-#   take advantage of the partial full when the next backup is run. This
-#   parameter sets the age of the partial full in days: if the partial backup is
-#   older than this number of days, then rsync will ignore (not use) the partial
-#   full when the next backup is run. If you set this to a negative value then
-#   no partials will be saved. If you set this to 0, partials will be saved, but
-#   will not be used by the next backup.
 #
 # @param ping_cmd
 #   Ping command. The following variables are substituted at run-time:
@@ -205,12 +220,27 @@
 # @param rsync_args
 #   Arguments to rsync for backup.
 #
+# @param rsync_full_args_extra
+#   Additional arguments to rsync for full backups.
+#
+# @param rsync_incr_args_extra
+#   Additional arguments to rsync for incremental backups.
+#
+# @param rsync_ssh_args
+#   Ssh arguments for rsync to run ssh to connect to the client.
+#   Rather than permit root ssh on the client, it is more secure
+#   to just allow ssh via a low-privileged user, and use sudo
+#   in $Conf{RsyncClientPath}.
+#
 # @param rsync_client_cmd
 #   Full command to run rsync on the client machine. The default will run
 #   the rsync command as the user you specify in system_account.
 #
 # @param rsync_client_restore_cmd
 #   Full command to run rsync for restore on the client.
+#
+# @param rsync_restore_args_extra
+#   Additional arguments to rsync for restore.
 #
 # @param rsync_csum_cache_verify_prob
 #   When rsync checksum caching is enabled (by adding the
@@ -323,31 +353,36 @@ class backuppc::client (
   Optional[Integer] $email_notify_min_days                   = undef,
   Optional[Integer] $email_notify_old_backup_days            = undef,
   Optional[Backuppc::Domain] $email_user_dest_domain         = undef,
+  Optional[Integer] $fill_cycle                              = 0,
   Optional[Integer] $full_age_max                            = undef,
   Optional[Variant[Integer,Array[Integer]]] $full_keep_cnt   = undef,
+  Optional[Integer] $full_keep_cnt_min                       = undef,
   Optional[Numeric] $full_period                             = undef,
   Optional[Integer] $hosts_file_dhcp                         = 0,
   Optional[String] $hosts_file_more_users                    = undef,
   Optional[String] $hosts_file_user                          = 'backuppc',
   Optional[Integer] $incr_age_max                            = undef,
-  Optional[Boolean] $incr_fill                               = undef,
   Optional[Integer] $incr_keep_cnt                           = undef,
-  Optional[Array[Integer]] $incr_levels                      = undef,
+  Optional[Integer] $incr_keep_cnt_min                       = undef,
   Optional[Numeric] $incr_period                             = undef,
-  Optional[Integer] $partial_age_max                         = undef,
   Optional[String] $ping_cmd                                 = undef,
   Optional[Integer] $ping_max_msec                           = 20,
+  Optional[Integer[0,3]] $ref_cnt_fsck                       = 1,
   Optional[String] $restore_post_user_cmd                    = undef,
   Optional[String] $restore_pre_user_cmd                     = undef,
   Optional[Array[String]] $rsync_args_extra                  = undef,
   Optional[Array[String]] $rsync_args                        = undef,
+  Optional[Array[String]] $rsync_full_args_extra             = undef,
+  Optional[Array[String]] $rsync_incr_args_extra             = undef,
+  Optional[Array[String]] $rsync_restore_args                = undef,
+  Optional[Array[String]] $rsync_restore_args_extra          = undef,
+  Optional[Array[String]] $rsync_ssh_args                    = undef,
   Optional[String] $rsync_client_cmd                         = undef,
   Optional[String] $rsync_client_restore_cmd                 = undef,
   Optional[Float] $rsync_csum_cache_verify_prob              = undef,
   Optional[Integer] $rsyncd_client_port                      = undef,
   Optional[String] $rsyncd_passwd                            = undef,
   Optional[String] $rsyncd_user_name                         = undef,
-  Optional[Array[String]] $rsync_restore_args                = undef,
   Optional[Backuppc::ShareName] $rsync_share_name            = undef,
   Optional[String] $smb_client_full_cmd                      = undef,
   Optional[String] $smb_client_incr_cmd                      = undef,
@@ -376,7 +411,6 @@ class backuppc::client (
     fail('Please provide the hostname of the node that hosts backuppc.')
   }
 
-  $real_incr_fill = bool2num($incr_fill)
   $real_backups_disable = bool2num($backups_disable)
   $real_rsyncd_auth_required = bool2num($rsyncd_auth_required)
   if $user_cmd_check_status != undef {
