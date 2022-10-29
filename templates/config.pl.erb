@@ -105,17 +105,9 @@ $Conf{RsyncShareName} = '/';
 $Conf{RsyncdClientPort} = 873;
 $Conf{RsyncdUserName} = '';
 $Conf{RsyncdPasswd} = '';
-<% if defined?(@rsync_args_extra) and !@rsync_args_extra.empty? -%>
-$Conf{RsyncArgsExtra} = <%= PP.pp(@rsync_args_extra,'').chomp.tr(?", ?') -%>;
-<% end -%>
-<% if defined?(@rsync_full_args_extra) and !@rsync_full_args_extra.empty? -%>
-$Conf{RsyncFullArgsExtra} = <%= PP.pp(@rsync_full_args_extra,'').chomp.tr(?", ?') -%>;
-<% end -%>
-<% if defined?(@rsync_incr_args_extra) and !@rsync_incr_args_extra.empty? -%>
-$Conf{RsyncIncrArgsExtra} = <%= PP.pp(@rsync_incr_args_extra,'').chomp.tr(?", ?') -%>;
-<% else -%>
-$Conf{RsyncIncrArgsExtra} = [];
-<% end -%>
+$Conf{RsyncArgsExtra} = <% if @rsync_args_extra -%><%= PP.pp(@rsync_args_extra,'').chomp.tr(?", ?') -%>;<% else -%>[]<% end -%>;
+$Conf{RsyncFullArgsExtra} = <% if @rsync_full_args_extra -%><%= PP.pp(@rsync_full_args_extra,'').chomp.tr(?", ?') -%>;<% else -%>[]<% end -%>;
+$Conf{RsyncIncrArgsExtra} = <% if @rsync_incr_args_extra -%><%= PP.pp(@rsync_incr_args_extra,'').chomp.tr(?", ?') -%>;<% else -%>[]<% end -%>;
 $Conf{RsyncArgs} = [
     '--super',
     '--recursive',
