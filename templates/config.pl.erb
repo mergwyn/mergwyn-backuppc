@@ -113,6 +113,8 @@ $Conf{RsyncFullArgsExtra} = <%= PP.pp(@rsync_full_args_extra,'').chomp.tr(?", ?'
 <% end -%>
 <% if defined?(@rsync_incr_args_extra) and !@rsync_incr_args_extra.empty? -%>
 $Conf{RsyncIncrArgsExtra} = <%= PP.pp(@rsync_incr_args_extra,'').chomp.tr(?", ?') -%>;
+<% else -%>
+$Conf{RsyncIncrArgsExtra} = [];
 <% end -%>
 $Conf{RsyncArgs} = [
     '--super',
