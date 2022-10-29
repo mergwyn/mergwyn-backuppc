@@ -390,18 +390,18 @@ class backuppc::server (
   Integer $trash_clean_sleep_sec                            = 300,
   Boolean $user_cmd_check_status                            = true,
   Array[Backuppc::Hours] $wakeup_schedule = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
-  Optional[Backuppc::Domain] $email_user_dest_domain        = undef,
-  Optional[Stdlib::Absolutepath] $par_path                  = '/usr/bin/par2',
-  Optional[Hash] $preseed_file                              = {
+  Stdlib::Absolutepath $par_path                            = '/usr/bin/par2',
+  Hash $preseed_file                                        = {
     '/var/cache/debconf/backuppc.seeds' => {
       ensure => 'present',
       content => "template('backuppc/Debian-preeseed.erb')"
     }
   },
-  Optional[Array[String]] $rsync_args_extra                 = undef,
-  Optional[Array[String]] $rsync_full_args_extra            = [ '--checksum' ],
-  Optional[Array[String]] $rsync_incr_args_extra            = undef,
-  Optional[Array[String]] $rsync_ssh_args                   = [ '-e', '$sshPath -l root' ],
+  Array[String] $rsync_args_extra                           = [],
+  Array[String] $rsync_full_args_extra                      = [ '--checksum' ],
+  Array[String] $rsync_incr_args_extra                      = [],
+  Array[String] $rsync_ssh_args                             = [ '-e', '$sshPath -l root' ],
+  Optional[Backuppc::Domain] $email_user_dest_domain        = undef,
 ) {
 
   if empty($backuppc_password) {

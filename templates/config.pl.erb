@@ -63,10 +63,8 @@ $Conf{ArchiveInfoKeepCnt} = <%= @archive_info_keep_cnt %>;
 $Conf{BackupFilesOnly} = undef;
 $Conf{BackupFilesExclude} = undef;
 $Conf{BlackoutBadPingLimit} = 3;
-$Conf{BlackoutGoodCnt}      = <%= @blackout_good_cnt %>;
-<% if defined?(@blackout_periods) -%>
+$Conf{BlackoutGoodCnt} = <%= @blackout_good_cnt %>;
 $Conf{BlackoutPeriods} = <%= PP.pp(@blackout_periods,'').chomp.tr(?", ?') -%>;
-<% end -%>
 $Conf{BackupZeroFilesIsFatal} = <%= @real_bzfif %>;
 $Conf{XferMethod} = 'rsync';
 $Conf{XferLogLevel} = 1;
@@ -98,16 +96,14 @@ $Conf{TarClientRestoreCmd} = '$sshPath -q -x -l root $host'
 $Conf{TarClientPath} = '<%= @tar_path  %>';
 $Conf{RsyncClientPath} = '<%= @rsync_path  %>';
 $Conf{RsyncBackupPCPath} = '<%= @rsync_bpc_path  %>';
-<% if defined?(@rsync_ssh_args) and !@rsync_ssh_args.empty? -%>
 $Conf{RsyncSshArgs} = <%= PP.pp(@rsync_ssh_args,'').chomp.tr(?", ?') -%>;
-<% end -%>
 $Conf{RsyncShareName} = '/';
 $Conf{RsyncdClientPort} = 873;
 $Conf{RsyncdUserName} = '';
 $Conf{RsyncdPasswd} = '';
-$Conf{RsyncArgsExtra} = <% if @rsync_args_extra -%><%= PP.pp(@rsync_args_extra,'').chomp.tr(?", ?') -%>;<% else -%>[]<% end -%>;
-$Conf{RsyncFullArgsExtra} = <% if @rsync_full_args_extra -%><%= PP.pp(@rsync_full_args_extra,'').chomp.tr(?", ?') -%>;<% else -%>[]<% end -%>;
-$Conf{RsyncIncrArgsExtra} = <% if @rsync_incr_args_extra -%><%= PP.pp(@rsync_incr_args_extra,'').chomp.tr(?", ?') -%>;<% else -%>[]<% end -%>;
+$Conf{RsyncArgsExtra} = <%= PP.pp(@rsync_args_extra,'').chomp.tr(?", ?') -%>;
+$Conf{RsyncFullArgsExtra} = <%= PP.pp(@rsync_full_args_extra,'').chomp.tr(?", ?') -%>;
+$Conf{RsyncIncrArgsExtra} = <%= PP.pp(@rsync_incr_args_extra,'').chomp.tr(?", ?') -%>;
 $Conf{RsyncArgs} = [
     '--super',
     '--recursive',
