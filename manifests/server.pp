@@ -80,13 +80,22 @@
 #    URL of the BackupPC_Admin CGI script. Used for email messages.
 #
 # @param df_max_usage_pct
-#   Maximum threshold for disk utilization on the __TOPDIR__ filesystem. If the
+#   Maximum threshold for disk utilization on the $topdir filesystem. If the
 #   output from $Conf{DfPath} reports a percentage larger than this number then
 #   no new regularly scheduled backups will be run. However, user requested
 #   backups (which are usually incremental and tend to be small) are still
 #   performed, independent of disk usage. Also, currently running backups will
 #   not be terminated when the disk usage exceeds this number.
 #
+# @param df_max_inode_usage_pct
+#   Maximum threshold for inode utilization on the $topdir filesystem.
+#   If the output from $Conf{DfInodeUsageCmd} reports a percentage larger
+#   than this number then no new regularly scheduled backups will be run.
+#   However, user requested backups (which are usually incremental and
+#   tend to be small) are still performed, independent of disk usage.
+#   Also, currently running backups will not be terminated when the disk
+#   inode usage exceeds this number.
+
 # @param email_admin_user_name
 #   Destination address to an administrative user who will receive a nightly
 #   email with warnings and errors.
@@ -238,6 +247,12 @@
 # @param rsync_args_extra
 #   Additional arguments to rsync for backup.
 #
+# @param rsync_full_args_extra
+#   Additional arguments to rsync for full backups.
+#
+# @param rsync_incr_args_extra
+#   Additional arguments to rsync for incremental backups.
+#
 # @param rsync_ssh_args
 #   Ssh arguments for rsync to run ssh to connect to the client.
 #   Rather than permit root ssh on the client, it is more secure
@@ -335,6 +350,7 @@ class backuppc::server (
   Stdlib::Absolutepath $config_apache                       = '/etc/apache2/conf.d/backuppc.conf',
   Stdlib::Absolutepath $config                              = "${config_directory}/config.pl",
   Integer $df_max_usage_pct                                 = 95,
+  Integer $df_max_inode_usage_pct                           = 95,
   Backuppc::DhcpAddressRange $dhcp_address_ranges           = [],
   String $email_admin_user_name                             = 'backuppc',
   String $email_from_user_name                              = 'backuppc',
@@ -383,6 +399,8 @@ class backuppc::server (
     }
   },
   Optional[Array[String]] $rsync_args_extra                 = undef,
+  Optional[Array[String]] $rsync_full_args_extra            = [ '--checksum' ],
+  Optional[Array[String]] $rsync_incr_args_extra            = [],
   Optional[Array[String]] $rsync_ssh_args                   = [ '-e', '$sshPath -l root' ],
 ) {
 

@@ -33,6 +33,7 @@ $Conf{CatPath}   = '/bin/cat';
 $Conf{GzipPath}  = '<%= @gzip_path  %>';
 $Conf{Bzip2Path} = '<%= @bzip2_path  %>';
 $Conf{DfMaxUsagePct} = <%= @df_max_usage_pct %>;
+$Conf{DfMaxInodeUsagePct} = <%= @df_max_inode_usage_pct %>;
 $Conf{TrashCleanSleepSec} = <%= @trash_clean_sleep_sec %>;
 $Conf{DHCPAddressRanges} =  <%= PP.pp(@dhcp_address_ranges,'').chomp.tr(?", ?') -%>;
 $Conf{BackupPCUser} = 'backuppc';
@@ -107,10 +108,12 @@ $Conf{RsyncdPasswd} = '';
 <% if defined?(@rsync_args_extra) and !@rsync_args_extra.empty? -%>
 $Conf{RsyncArgsExtra} = <%= PP.pp(@rsync_args_extra,'').chomp.tr(?", ?') -%>;
 <% end -%>
-# TODO parameters??
-$Conf{RsyncFullArgsExtra} = ['--checksum'];
-$Conf{RsyncIncrArgsExtra} = [];  
-# TODO end
+<% if defined?(@rsync_full_args_extra) and !@rsync_full_args_extra.empty? -%>
+$Conf{RsyncFullArgsExtra} = <%= PP.pp(@rsync_full_args_extra,'').chomp.tr(?", ?') -%>;
+<% end -%>
+<% if defined?(@rsync_incr_args_extra) and !@rsync_incr_args_extra.empty? -%>
+$Conf{RsyncIncrArgsExtra} = <%= PP.pp(@rsync_incr_args_extra,'').chomp.tr(?", ?') -%>;
+<% end -%>
 $Conf{RsyncArgs} = [
     '--super',
     '--recursive',

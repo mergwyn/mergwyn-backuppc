@@ -89,6 +89,7 @@ describe 'backuppc::server' do
             'pool_nightly_digest_check_percent' => 10,
             'max_old_log_files' => 7,
             'df_max_usage_pct' => 89,
+            'df_max_inode_usage_pct' => 89,
             'trash_clean_sleep_sec' => 299,
             'cmd_queue_nice' => 1,
             'pool_v3_enabled' => false,
@@ -115,6 +116,9 @@ describe 'backuppc::server' do
             'cgi_date_format_mmdd' => 2,
             'user_cmd_check_status' => false,
             'ping_max_msec' => 4,
+            'rsync_args_extra' => ['--testargs'],
+            'rsync_full_args_extra' => ['--testfullargs'],
+            'rsync_incr_args_extra' => ['--testincrargs'],
             'rsync_ssh_args' => ['--test', 'args'],
           }
           test_params.each do |tparam, tvalue|
