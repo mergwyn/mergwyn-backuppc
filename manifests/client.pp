@@ -185,10 +185,6 @@
 # @param incr_keep_cnt_min
 #   Minimum number of incremental backups to keep.
 #
-# @param incr_levels
-#   A full backup has level 0. A new incremental of level N will backup all files
-#   that have changed since the most recent backup of a lower level.
-#
 # @param incr_period
 #   Minimum period in days between incremental backups (a user requested
 #   incremental backup will be done anytime on demand).
