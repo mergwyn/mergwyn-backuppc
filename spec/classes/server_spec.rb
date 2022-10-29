@@ -119,6 +119,7 @@ describe 'backuppc::server' do
             'rsync_args_extra' => ['--testargs'],
             'rsync_full_args_extra' => ['--testfullargs'],
             'rsync_incr_args_extra' => ['--testincrargs'],
+            'rsync_restore_args_extra' => ['--testrestoreargs'],
             'rsync_ssh_args' => ['--test', 'args'],
           }
           test_params.each do |tparam, tvalue|

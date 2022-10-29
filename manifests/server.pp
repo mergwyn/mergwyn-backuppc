@@ -253,6 +253,9 @@
 # @param rsync_incr_args_extra
 #   Additional arguments to rsync for incremental backups.
 #
+# @param rsync_restore_args_extra
+#   Additional arguments to rsync for restore.
+#
 # @param rsync_ssh_args
 #   Ssh arguments for rsync to run ssh to connect to the client.
 #   Rather than permit root ssh on the client, it is more secure
@@ -401,6 +404,7 @@ class backuppc::server (
   Array[String] $rsync_full_args_extra                      = [ '--checksum' ],
   Array[String] $rsync_incr_args_extra                      = [],
   Array[String] $rsync_ssh_args                             = [ '-e', '$sshPath -l root' ],
+  Array[String] $rsync_restore_args_extra                   = [],
   Optional[Backuppc::Domain] $email_user_dest_domain        = undef,
 ) {
 
