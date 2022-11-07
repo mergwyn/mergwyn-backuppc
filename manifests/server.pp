@@ -25,10 +25,24 @@
 #   backed up. If you have shares that might be empty (and therefore an empty
 #   backup is valid) you should set this to false.
 #
+# @param pool_v3_enabled
+#   If a V3 pool exists (ie: an upgrade) set this to 1.  This causes the
+#   V3 pool to be checked for matches if there are no matches in the V4
+#    pool.
+#   For new installations, this should be set to 0.
+#
 # @param backuppc_nightly_period
 #   How many days (runs) it takes BackupPC_nightly to traverse the entire
 #   pool. Normally this is 1, which means every night it runs, it does
 #   traverse the entire pool removing unused pool files.
+#
+# @param pool_size_nightly_update_period
+#   Sets how many nights it takes to completely update the V4 pool size.
+#
+# @param pool_nightly_digest_check_percent
+#   Integrity check the pool files by confirming the md5 digest of the
+#   contents matches their file name.  Because the pool is very large,
+#   only check a small random percentage of the pool files each night.
 #
 # @param backuppc_password
 #   Password for the backuppc user used to access the web interface.
@@ -66,12 +80,32 @@
 #    URL of the BackupPC_Admin CGI script. Used for email messages.
 #
 # @param df_max_usage_pct
-#   Maximum threshold for disk utilization on the __TOPDIR__ filesystem. If the
+#   Maximum threshold for disk utilization on the $topdir filesystem. If the
 #   output from $Conf{DfPath} reports a percentage larger than this number then
 #   no new regularly scheduled backups will be run. However, user requested
 #   backups (which are usually incremental and tend to be small) are still
 #   performed, independent of disk usage. Also, currently running backups will
 #   not be terminated when the disk usage exceeds this number.
+#
+# @param df_max_inode_usage_pct
+#   Maximum threshold for inode utilization on the $topdir filesystem.
+#   If the output from $Conf{DfInodeUsageCmd} reports a percentage larger
+#   than this number then no new regularly scheduled backups will be run.
+#   However, user requested backups (which are usually incremental and
+#   tend to be small) are still performed, independent of disk usage.
+#   Also, currently running backups will not be terminated when the disk
+#   inode usage exceeds this number.
+#
+# @param ref_cnt_fsck
+#   Reference counts of pool files are computed per backup by accumulating the relative changes.
+#   That means, however, that any error will never be corrected. To be more conservative, we do
+#   a periodic full-redo of the backup reference counts (called an "fsck"). $Conf{RefCntFsck} controls
+#   how often this is done:
+#
+#     0: no additional fsck
+#     1: do an fsck on the last backup if it is from a full backup
+#     2: do an fsck on the last two backups always
+#     3: do a full fsck on all the backups
 #
 # @param email_admin_user_name
 #   Destination address to an administrative user who will receive a nightly
@@ -106,22 +140,25 @@
 #   if at least this much time has elapsed since the last full dump, and at
 #   least $Conf{IncrPeriod} days has elapsed since the last successful dump.
 #
+# @param fill_cycle
+#   In V4+, full/incremental backups are decoupled from whether the stored
+#   backup is filled/unfilled.
+#
+#   To mimic V3 behaviour, if $Conf{FillCycle} is set to zero then fill/unfilled
+#   will continue to match full/incremental: full backups will remained filled,
+#   and incremental backups will be unfilled.  (However, the most recent
+#   backup is always filled, whether it is full or incremental.)  This is
+#   the recommended setting to keep things simple: since the backup expiry
+#   is actually done based on filled/unfilled (not full/incremental), keeping
+#   them synched makes it easier to understand the expiry settings.
+#
 # @param incr_age_max
 #   Very old incremental backups are removed after $Conf{IncrAgeMax} days.
 #   However, we keep at least $Conf{IncrKeepCntMin} incremental backups no
 #   matter how old they are.
 #
-# @param incr_fill
-#   Boolean. Whether incremental backups are filled. "Filling" means that the
-#   most recent fulli (or filled) dump is merged into the new incremental dump
-#   using hardlinks. This makes an incremental dump look like a full dump.
-#
 # @param incr_keep_cnt
 #   Number of incremental backups to keep.
-#
-# @param incr_levels
-#   A full backup has level 0. A new incremental of level N will backup all files
-#   that have changed since the most recent backup of a lower level.
 #
 # @param incr_period
 #   Minimum period in days between incremental backups (a user requested
@@ -164,19 +201,14 @@
 #   jobs. This limit is to make sure BackupPC doesn't fall too far
 #   behind in running BackupPC_link commands.
 #
+# @param cmd_queue_nice
+#   Nice level at which CmdQueue commands (eg: BackupPC_link and
+#   BackupPC_nightly) are run at. 
+#
 # @param max_user_backups
 #   Additional number of simultaneous backups that users
 #   can run. As many as $Conf{MaxBackups} + $Conf{MaxUserBackups}
 #   requests can run at the same time.
-#
-# @param partial_age_max
-#   A failed full backup is saved as a partial backup. The rsync XferMethod can
-#   take advantage of the partial full when the next backup is run. This
-#   parameter sets the age of the partial full in days: if the partial backup is
-#   older than this number of days, then rsync will ignore (not use) the partial
-#   full when the next backup is run. If you set this to a negative value then
-#   no partials will be saved. If you set this to 0, partials will be saved, but
-#   will not be used by the next backup.
 #
 # @param ping_max_msec
 #   Maximum RTT value (in ms) above which backup won't be started. Default to
@@ -226,6 +258,21 @@
 # @param rsync_args_extra
 #   Additional arguments to rsync for backup.
 #
+# @param rsync_full_args_extra
+#   Additional arguments to rsync for full backups.
+#
+# @param rsync_incr_args_extra
+#   Additional arguments to rsync for incremental backups.
+#
+# @param rsync_restore_args_extra
+#   Additional arguments to rsync for restore.
+#
+# @param rsync_ssh_args
+#   Ssh arguments for rsync to run ssh to connect to the client.
+#   Rather than permit root ssh on the client, it is more secure
+#   to just allow ssh via a low-privileged user, and use sudo
+#   in $Conf{RsyncClientPath}.
+#
 # @param package
 #   The name of the backuppc package.
 #
@@ -265,6 +312,9 @@
 # @param log_directory
 #   Location for log files.
 #
+# @param run_directory
+#   Location for files used during run.
+#
 # @param config_apache
 #   The file where the backuppc specifc config for apache is stored.
 #
@@ -295,8 +345,12 @@ class backuppc::server (
   Boolean $apache_require_ssl                               = false,
   Integer $archive_info_keep_cnt                            = 10,
   Integer $backuppc_nightly_period                          = 1,
+  Integer $pool_size_nightly_update_period                  = 16,
+  Integer[0,3] $ref_cnt_fsck                                = 1,
+  Integer[0,100] $pool_nightly_digest_check_percent         = 1,
   String $backuppc_password                                 = '',
   Boolean $backup_zero_files_is_fatal                       = true,
+  Boolean $pool_v3_enabled                                  = false,
   Integer $blackout_good_cnt                                = 7,
   Backuppc::BlackoutPeriods $blackout_periods = [ { hourBegin => 7.0, hourEnd => 19.5, weekDays => [1,2,3,4,5], }, ],
   Stdlib::Absolutepath $bzip2_path                          = '/bin/bzip2',
@@ -310,6 +364,7 @@ class backuppc::server (
   Stdlib::Absolutepath $config_apache                       = '/etc/apache2/conf.d/backuppc.conf',
   Stdlib::Absolutepath $config                              = "${config_directory}/config.pl",
   Integer $df_max_usage_pct                                 = 95,
+  Integer $df_max_inode_usage_pct                           = 95,
   Backuppc::DhcpAddressRange $dhcp_address_ranges           = [],
   String $email_admin_user_name                             = 'backuppc',
   String $email_from_user_name                              = 'backuppc',
@@ -320,52 +375,57 @@ class backuppc::server (
   Integer $full_age_max                                     = 90,
   Variant[Integer,Array[Integer]] $full_keep_cnt            = 1,
   Numeric $full_period                                      = 6.97,
+  Integer $fill_cycle                                       = 0,
   String[1] $group_apache                                   = 'www-data',
   Stdlib::Absolutepath $gzip_path                           = '/bin/gzip',
   Stdlib::Absolutepath $hosts                               = "${config_directory}/hosts",
   Stdlib::Absolutepath $htpasswd_apache                     = "${config_directory}/htpasswd",
   Integer $incr_age_max                                     = 30,
-  Boolean $incr_fill                                        = false,
   Integer $incr_keep_cnt                                    = 6,
-  Array[Integer] $incr_levels                               = [1],
   Numeric $incr_period                                      = 0.97,
   Stdlib::Absolutepath $install_directory                   = '/usr/share/backuppc',
   String $language                                          = 'en',
   Stdlib::Absolutepath $log_directory                       = "${topdir}/log",
+  Stdlib::Absolutepath $run_directory                       = '/run/backuppc',
   Integer $max_backuppc_nightly_jobs                        = 2,
   Integer $max_backups                                      = 4,
   Integer $max_old_log_files                                = 14,
   Integer $max_pending_cmds                                 = 15,
+  Integer $cmd_queue_nice                                   = 10,
   Integer $max_user_backups                                 = 4,
   String[1] $package                                        = 'backuppc',
-  Integer $partial_age_max                                  = 3,
   Integer $ping_max_msec                                    = 20,
   Integer $restore_info_keep_cnt                            = 10,
   Stdlib::Absolutepath $rsync_path                          = '/bin/rsync',
+  Stdlib::Absolutepath $rsync_bpc_path                      = '/usr/libexec/backuppc-rsync/rsync_bpc',
   String[1] $service                                        = 'backuppc',
   Boolean $service_enable                                   = true,
   Stdlib::Absolutepath $tar_path                            = '/bin/tar',
   Integer $trash_clean_sleep_sec                            = 300,
   Boolean $user_cmd_check_status                            = true,
   Array[Backuppc::Hours] $wakeup_schedule = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
-  Optional[Backuppc::Domain] $email_user_dest_domain        = undef,
-  Optional[Stdlib::Absolutepath] $par_path                  = '/usr/bin/par2',
-  Optional[Hash] $preseed_file                              = {
+  Stdlib::Absolutepath $par_path                            = '/usr/bin/par2',
+  Hash $preseed_file                                        = {
     '/var/cache/debconf/backuppc.seeds' => {
       ensure => 'present',
       content => "template('backuppc/Debian-preeseed.erb')"
     }
   },
-  Optional[Array[String]] $rsync_args_extra                 = undef,
+  Array[String] $rsync_args_extra                           = [],
+  Array[String] $rsync_full_args_extra                      = [ '--checksum' ],
+  Array[String] $rsync_incr_args_extra                      = [],
+  Array[String] $rsync_ssh_args                             = [ '-e', '$sshPath -l root' ],
+  Array[String] $rsync_restore_args_extra                   = [],
+  Optional[Backuppc::Domain] $email_user_dest_domain        = undef,
 ) {
 
   if empty($backuppc_password) {
     fail('Please provide a password for the backuppc user. This is used to login to the web based administration site.')
   }
 
-  $real_incr_fill = bool2num($incr_fill)
-  $real_bzfif     = bool2num($backup_zero_files_is_fatal)
-  $real_uccs      = bool2num($user_cmd_check_status)
+  $real_bzfif      = bool2num($backup_zero_files_is_fatal)
+  $real_uccs       = bool2num($user_cmd_check_status)
+  $real_v3_enabled = bool2num($pool_v3_enabled)
 
   $real_topdir = $topdir ? {
     ''      => lookup('backuppc::server::topdir'),
@@ -375,12 +435,6 @@ class backuppc::server (
   $directory_ensure = $ensure ? {
     'present' => 'directory',
     default => 'absent',
-  }
-
-  # On Debian, adapt log_directory to $topdir value
-  $real_log_directory = $facts['os']['family'] ? {
-    'Debian' => "${topdir}/log",
-    default  => $log_directory,
   }
 
   # If topdir is changed, create a symlink between "default" topdir and the custom

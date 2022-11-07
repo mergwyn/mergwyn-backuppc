@@ -11,10 +11,12 @@ backuppc::server::config_apache:      '/etc/apache2/conf.d/backuppc.conf'
 backuppc::server::group_apache:       'www-data'
 backuppc::server::hosts:              "%{hiera('backuppc::server::config_directory')}/hosts"
 backuppc::server::log_directory:      '/var/lib/backuppc/log'
+backuppc::server::run_directory:      '/run/backuppc'
 backuppc::server::manage_apache:      true
 backuppc::server::package:            'backuppc'
 backuppc::server::par_path:           '/usr/bin/par2'
 backuppc::server::rsync_path:         '/usr/bin/rsync'
+backuppc::server::rsync_bpc_path:     '/usr/libexec/backuppc-rsync/rsync_bpc'
 backuppc::server::service:            'backuppc'
 backuppc::server::tar_path:           '/bin/tar'
 backuppc::server::preseed_file:
@@ -23,4 +25,5 @@ backuppc::server::preseed_file:
     content: "template('backuppc/Debian-preeseed.erb')"
 
 backuppc::client::rsync_path:         '/usr/bin/rsync'
+backuppc::client::rsync_bpc_path:     '/usr/libexec/backuppc-rsync/rsync_bpc'
 backuppc::client::tar_path:           '/bin/tar'

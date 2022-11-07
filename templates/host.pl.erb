@@ -13,8 +13,14 @@ $Conf{FullPeriod} = <%= @full_period %>;
 <% if defined?(@incr_period) -%>
 $Conf{IncrPeriod} = <%= @incr_period %>;
 <% end -%>
+<% if defined?(@fill_cycle) -%>
+$Conf{FillCycle}     = <%= @fill_cycle %>;
+<% end -%>
 <% if defined?(@full_keep_cnt) -%>
 $Conf{FullKeepCnt} = <%= PP.pp(@full_keep_cnt,'').chomp.tr(?", ?') -%>;
+<% end -%>
+<% if defined?(@full_keep_cnt_min) -%>
+$Conf{FullKeepCntMin} = <%= @full_keep_cnt_min -%>;
 <% end -%>
 <% if defined?(@full_age_max) -%>
 $Conf{FullAgeMax}     = <%= @full_age_max %>;
@@ -22,17 +28,11 @@ $Conf{FullAgeMax}     = <%= @full_age_max %>;
 <% if defined?(@incr_keep_cnt) -%>
 $Conf{IncrKeepCnt} = <%= @incr_keep_cnt %>;
 <% end -%>
+<% if defined?(@incr_keep_cnt_min) -%>
+$Conf{IncrKeepCntMin} = <%= @incr_keep_cnt_min %>;
+<% end -%>
 <% if defined?(@incr_age_max) -%>
 $Conf{IncrAgeMax}     = <%= @incr_age_max %>;
-<% end -%>
-<% if defined?(@incr_fill) -%>
-$Conf{IncrFill} = <%= @real_incr_fill %>;
-<% end -%>
-<% if defined?(@incr_levels) and !@incr_levels.empty? -%>
-$Conf{IncrLevels} = <%= PP.pp(@incr_levels,'').chomp.tr(?", ?') -%>;
-<% end -%>
-<% if defined?(@partial_age_max) -%>
-$Conf{PartialAgeMax} = <%= @partial_age_max %>;
 <% end -%>
 <% if defined?(@blackout_bad_ping_limit) -%>
 $Conf{BlackoutBadPingLimit} = <%= @blackout_bad_ping_limit %>;
@@ -93,16 +93,6 @@ $Conf{TarClientRestoreCmd} = '$sshPath -q -x -l <%= @system_account %> $host'
 . ' env LC_ALL=C $tarPath -x -p --numeric-owner --same-owner'
 . ' -v -f - -C $shareName+';
 <% end -%>
-<% if defined?(@rsync_client_cmd) and !@rsync_client_cmd.empty? -%>
-$Conf{RsyncClientCmd} = '<%= @rsync_client_cmd %>';
-<% elsif !@system_account.empty? %>
-$Conf{RsyncClientCmd} = '$sshPath -q -x -l <%= @system_account %> $host $rsyncPath $argList+';
-<% end -%>
-<% if defined?(@rsync_client_restore_cmd) and !@rsync_client_restore_cmd.empty? -%>
-$Conf{RsyncClientRestoreCmd} = '<%= @rsync_client_restore_cmd %>';
-<% elsif !@system_account.empty? -%>
-$Conf{RsyncClientRestoreCmd} = '$sshPath -q -x -l <%= @system_account %> $host $rsyncPath $argList+';
-<% end -%>
 <% if defined?(@rsync_share_name) and !@rsync_share_name.empty? -%>
 $Conf{RsyncShareName} = <%= PP.pp(@rsync_share_name,'').chomp.tr(?", ?') -%>;
 <% end -%>
@@ -127,8 +117,20 @@ $Conf{RsyncArgs} = <%= PP.pp(@rsync_args,'').chomp.tr(?", ?') -%>;
 <% if defined?(@rsync_args_extra) and !@rsync_args_extra.empty? -%>
 $Conf{RsyncArgsExtra} = <%= PP.pp(@rsync_args_extra,'').chomp.tr(?", ?') -%>;
 <% end -%>
+<% if defined?(@rsync_full_args_extra) and !@rsync_full_args_extra.empty? -%>
+$Conf{RsyncFullArgsExtra} = <%= PP.pp(@rsync_full_args_extra,'').chomp.tr(?", ?') -%>;
+<% end -%>
+<% if defined?(@rsync_incr_args_extra) and !@rsync_incr_args_extra.empty? -%>
+$Conf{RsyncIncrArgsExtra} = <%= PP.pp(@rsync_incr_args_extra,'').chomp.tr(?", ?') -%>;
+<% end -%>
 <% if defined?(@rsync_restore_args) and !@rsync_restore_args.empty? -%>
 $Conf{RsyncRestoreArgs} = <%= PP.pp(@rsync_restore_args,'').chomp.tr(?", ?') -%>;
+<% end -%>
+<% if defined?(@rsync_restore_args_extra) and !@rsync_restore_args_extra.empty? -%>
+$Conf{RsyncRestoreArgsExtra} = <%= PP.pp(@rsync_restore_args_extra,'').chomp.tr(?", ?') -%>;
+<% end -%>
+<% if defined?(@rsync_ssh_args) and !@rsync_ssh_args.empty? -%>
+$Conf{RsyncSshArgs} = <%= PP.pp(@rsync_ssh_args,'').chomp.tr(?", ?') -%>;
 <% end -%>
 <% if defined?(@dump_pre_user_cmd) and !@dump_pre_user_cmd.empty? -%>
 $Conf{DumpPreUserCmd} = '<%= @dump_pre_user_cmd %>';
